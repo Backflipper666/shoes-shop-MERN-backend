@@ -23,6 +23,7 @@ const shoesSchema = new Schema({
     required: true,
     min: 0, // Minimum price of 0
   },
+
   color: {
     type: String,
     required: true,
@@ -41,6 +42,18 @@ const shoesSchema = new Schema({
     min: 0,
   },
   image: {
+    data: Buffer, // Embed the image data as a Buffer
+    contentType: String, // Specify the content type of the image
+  },
+  image2: {
+    data: Buffer, // Embed the image data as a Buffer
+    contentType: String, // Specify the content type of the image
+  },
+  image3: {
+    data: Buffer, // Embed the image data as a Buffer
+    contentType: String, // Specify the content type of the image
+  },
+  image4: {
     data: Buffer, // Embed the image data as a Buffer
     contentType: String, // Specify the content type of the image
   },
@@ -67,6 +80,26 @@ const shoesSchema = new Schema({
     type: String,
     enum: ['men', 'women', 'kids'],
     required: true,
+  },
+  onSale: {
+    type: Boolean,
+    default: false,
+    required: false,
+  },
+  discountPercent: {
+    type: Number,
+    default: 0,
+    min: 0,
+    max: 100,
+    required: false,
+  },
+  newCollection: {
+    type: Boolean,
+    default: false,
+  },
+  season: {
+    type: String,
+    enum: ['summer', 'winter', 'demi'],
   },
 });
 

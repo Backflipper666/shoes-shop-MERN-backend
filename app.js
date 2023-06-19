@@ -6,10 +6,11 @@ const logger = require('morgan');
 require('dotenv').config(); // Load environment variables from .env file
 const mongoose = require('mongoose');
 const multer = require('multer');
+const cors = require('cors');
 
 const indexRouter = require('./routes/index');
-const usersRouter = require('./routes/users');
 const shoesRouter = require('./routes/shoes');
+const userRouter = require('./routes/users');
 
 const app = express();
 
@@ -22,10 +23,15 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(
+  cors({
+    origin: 'http://localhost:3000',
+  })
+);
 
 app.use('/', indexRouter);
-app.use('/api/users', usersRouter);
 app.use('/api/shoes', shoesRouter);
+app.use('/api/user', userRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
