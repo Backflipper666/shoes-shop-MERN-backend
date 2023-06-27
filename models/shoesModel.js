@@ -1,3 +1,4 @@
+//ShoesModel.js
 const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
@@ -17,6 +18,8 @@ const shoesSchema = new Schema({
   },
   brand: {
     type: String,
+    enum: ['FILA', 'Nike', 'Adidas', 'Puma', 'Other'],
+    required: true,
   },
   price: {
     type: Number,
@@ -42,19 +45,19 @@ const shoesSchema = new Schema({
     min: 0,
   },
   image: {
-    data: Buffer, // Embed the image data as a Buffer
+    data: String, // Embed the image data as a Buffer
     contentType: String, // Specify the content type of the image
   },
   image2: {
-    data: Buffer, // Embed the image data as a Buffer
+    data: String, // Embed the image data as a Buffer
     contentType: String, // Specify the content type of the image
   },
   image3: {
-    data: Buffer, // Embed the image data as a Buffer
+    data: String, // Embed the image data as a Buffer
     contentType: String, // Specify the content type of the image
   },
   image4: {
-    data: Buffer, // Embed the image data as a Buffer
+    data: String, // Embed the image data as a Buffer
     contentType: String, // Specify the content type of the image
   },
   rating: {

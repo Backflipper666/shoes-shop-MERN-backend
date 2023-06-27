@@ -39,4 +39,46 @@ const signupUser = async (req, res) => {
   }
 };
 
-module.exports = { loginUser, signupUser };
+const addToFavorites = async (req, res) => {
+  const { email, shoeId } = req.body;
+
+  try {
+    const result = await User.addToFavorites(email, shoeId);
+
+    res.status(200).json({ result });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+const removeFromFavorites = async (req, res) => {
+  const { email, shoeId } = req.body;
+
+  try {
+    const result = await User.removeFromFavorites(email, shoeId);
+
+    res.status(200).json({ result });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+const getUserItems = async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    const result = await User.getUserItems(email);
+
+    res.status(200).json({ result });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+module.exports = {
+  loginUser,
+  signupUser,
+  addToFavorites,
+  removeFromFavorites,
+  getUserItems,
+};

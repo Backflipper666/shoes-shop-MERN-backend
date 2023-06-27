@@ -1,12 +1,25 @@
+//populatedb.js
 require('dotenv').config(); // Load environment variables from .env file
 const mongoose = require('mongoose');
 const fs = require('fs');
-const Shoes = require('./models/shoesModel'); // Replace with the actual path to your shoes model
+const Shoes = require('../models/shoesModel'); // Replace with the actual path to your shoes model
 
-const imageBuffer = fs.readFileSync('./imagesToUpload/nb/nb1.png');
-const imageBuffer2 = fs.readFileSync('./imagesToUpload/nb/nb2.png');
-const imageBuffer3 = fs.readFileSync('./imagesToUpload/nb/nb3.png');
-const imageBuffer4 = fs.readFileSync('./imagesToUpload/nb/nb4.jpg');
+const imageBuffer1 = fs.readFileSync(
+  './imagesToUpload/nike-waffle/nike-w1.png'
+);
+const imageBuffer2 = fs.readFileSync(
+  './imagesToUpload/nike-waffle/nike-w2.png'
+);
+const imageBuffer3 = fs.readFileSync(
+  './imagesToUpload/nike-waffle/nike-w3.png'
+);
+const imageBuffer4 = fs.readFileSync(
+  './imagesToUpload/nike-waffle/nike-w4.jpg'
+);
+
+const filePath = './imagesToUpload/nike-waffle/nike-w4.jpg';
+const imageBuffer = fs.readFileSync(filePath);
+const base64Image = imageBuffer.toString('base64');
 
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
@@ -14,7 +27,7 @@ mongoose.connect(process.env.MONGO_URI, {
 });
 
 const image = {
-  data: imageBuffer,
+  data: imageBuffer1,
   contentType: 'image/png', // Replace with the actual content type of your image
 };
 const image2 = {
@@ -39,15 +52,15 @@ db.once('open', async () => {
   // Create an array of shoe documents to insert
   const shoes = [
     {
-      title: 'Forrest Gump',
+      title: 'NIKE WAFFLE ONE',
       description:
-        'Forrest Gump Shoes Women 2023 Spring New Mesh Sneakers Balanced Lightweight Casual Retro Board Trainers',
-      brand: 'New balance',
-      price: 14000,
-      color: 'pink',
-      size: 37,
+        "Original New Arrival NIKE NIKE WAFFLE ONE SE Men's Running Shoes Sneakers",
+      brand: 'Nike',
+      price: 58000,
+      color: 'grey',
+      size: 42,
       material: 'Synthetic Leather',
-      stock: 90,
+      stock: 50,
       image: image,
       image2,
       image3,
@@ -56,25 +69,28 @@ db.once('open', async () => {
       rating: 4.5,
       reviews: [
         {
-          username: 'Dark Horse',
-          comment: 'Great shoes!',
+          username: 'Choji',
+          comment: 'Real nice!',
         },
         {
           username: 'Uchiha',
           comment: 'Light and comfortable for running.',
         },
       ],
-      gender: 'women',
-      onSale: false,
+      gender: 'men',
+      onSale: true,
       newCollection: true,
       season: 'summer',
+      discountPercent: 25,
+      newCollection: true,
     },
     // Add more shoe documents as needed
   ];
 
   try {
     // Insert the shoe documents into the database
-    await Shoes.deleteOne({ brand: 'New balance' });
+    await Shoes.insertMany(shoes);
+
     console.log('Data inserted successfully.');
   } catch (error) {
     console.error('Error occurred while inserting data:', error);
