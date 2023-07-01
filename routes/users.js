@@ -18,6 +18,6 @@ router.post('/signup', signupUser);
 
 router.patch('/add-to-favorites', requireAuth, addToFavorites);
 router.patch('/remove-from-favorites', requireAuth, removeFromFavorites);
-router.get('/items', requireAuth, getUserItems);
+router.get('/items', getUserItems);
 
 module.exports = router;

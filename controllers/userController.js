@@ -64,15 +64,9 @@ const removeFromFavorites = async (req, res) => {
 };
 
 const getUserItems = async (req, res) => {
-  const { email } = req.body;
+  const allUsers = await User.find({}).select('email favorites cart');
 
-  try {
-    const result = await User.getUserItems(email);
-
-    res.status(200).json({ result });
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
+  res.status(200).json({ allUsers });
 };
 
 module.exports = {
