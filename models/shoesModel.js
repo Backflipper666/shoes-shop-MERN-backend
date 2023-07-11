@@ -7,8 +7,8 @@ const shoesSchema = new Schema({
   title: {
     type: String,
     required: true,
-    minlength: 3, // Minimum of 3 characters
-    maxlength: 100, // Maximum of 100 characters
+    minlength: 3,
+    maxlength: 100,
   },
   description: {
     type: String,
@@ -24,25 +24,19 @@ const shoesSchema = new Schema({
   price: {
     type: Number,
     required: true,
-    min: 0, // Minimum price of 0
-  },
-
-  color: {
-    type: String,
-    required: true,
-  },
-  size: {
-    type: Number,
-    required: true,
-    min: 1, // Minimum size of 1
-  },
-  material: {
-    type: String,
-  },
-  stock: {
-    type: Number,
-    required: true,
     min: 0,
+  },
+  color: String,
+  stock: {
+    colors: {
+      type: Map,
+      of: {
+        sizes: {
+          type: Map,
+          of: Number,
+        },
+      },
+    },
   },
   image: {
     data: String, // Embed the image data as a Buffer

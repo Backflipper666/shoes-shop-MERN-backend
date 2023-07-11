@@ -1,7 +1,7 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
 const fs = require('fs');
-const Shoes = require('./models/shoesModel');
+const Shoes = require('../models/shoesModel');
 
 const filePath1 = './imagesToUpload/nike-tc/nike-tc1.png';
 const filePath2 = './imagesToUpload/nike-tc/nike-tc2.png';

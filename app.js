@@ -4,10 +4,12 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
-require('dotenv').config(); // Load environment variables from .env file
+require('dotenv').config();
 const mongoose = require('mongoose');
 const multer = require('multer');
 const cors = require('cors');
+const { default: AdminJS } = require('adminjs');
+const { buildRouter: AdminJSExpress } = require('@adminjs/express');
 
 const indexRouter = require('./routes/index');
 const shoesRouter = require('./routes/shoes');
@@ -16,7 +18,6 @@ const fakeRouter = require('./routes/fakeRoute');
 
 const app = express();
 
-// view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
@@ -32,25 +33,21 @@ app.use('/api/shoes', shoesRouter);
 app.use('/api/user', userRouter);
 app.use('/api/fake', fakeRouter);
 
-// catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));
 });
 
-// error handler
 app.use(function (err, req, res, next) {
-  // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // render the error page
   res.status(err.status || 500);
   res.render('error');
 });
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'backend/files'); // Replace with your desired destination folder path
+    cb(null, 'backend/files');
   },
   filename: function (req, file, cb) {
     cb(null, file.originalname);
@@ -59,13 +56,19 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-const port = process.env.PORT || 5000; // Use the PORT variable from .env or default to 5000
+const port = process.env.PORT || 5000;
 
-// connect to db
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {
-    // listen for requests
+    const admin = new AdminJS({
+      // Configure AdminJS options here
+    });
+
+    const adminRouter = AdminJSExpress.buildRouter(admin);
+
+    app.use(admin.options.rootPath, adminRouter);
+
     app.listen(port, () => {
       console.log('connected to db & listening on port', process.env.PORT);
     });
