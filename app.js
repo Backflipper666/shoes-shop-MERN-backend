@@ -4,19 +4,25 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
-require('dotenv').config(); // Load environment variables from .env file
+require('dotenv').config();
 const mongoose = require('mongoose');
 const multer = require('multer');
 const cors = require('cors');
+
+const AdminBro = require('admin-bro');
+const expressAdminBro = require('@admin-bro/express');
+const mongooseAdminBro = require('@admin-bro/mongoose');
 
 const indexRouter = require('./routes/index');
 const shoesRouter = require('./routes/shoes');
 const userRouter = require('./routes/users');
 const fakeRouter = require('./routes/fakeRoute');
 
+const User = require('./models/userModel');
+const Shoes = require('./models/shoesModel');
+
 const app = express();
 
-// view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
@@ -32,25 +38,59 @@ app.use('/api/shoes', shoesRouter);
 app.use('/api/user', userRouter);
 app.use('/api/fake', fakeRouter);
 
-// catch 404 and forward to error handler
-app.use(function (req, res, next) {
-  next(createError(404));
-});
+AdminBro.registerAdapter(mongooseAdminBro);
+const AdminBroOptions = {
+  resources: [
+    {
+      resource: User,
+      options: {
+        properties: {
+          _id: {
+            isVisible: { list: false, show: true, edit: false },
+          },
+          email: {
+            label: 'email',
+            isVisible: { list: true, show: true, edit: true },
+          },
+          password: {
+            label: 'password',
+            isVisible: { list: false, show: false, edit: false },
+          },
+        },
+      },
+    },
+    {
+      resource: Shoes,
+      options: {
+        properties: {
+          _id: {
+            isVisible: { list: false, show: true, edit: false },
+          },
+          title: {
+            label: 'Name',
+            isVisible: { list: true, show: true, edit: true },
+          },
+          description: {
+            label: 'Description',
+            isVisible: { list: true, show: true, edit: true },
+          },
+          price: {
+            label: 'Price',
+            isVisible: { list: true, show: true, edit: true },
+          },
+        },
+      },
+    },
+  ],
+};
 
-// error handler
-app.use(function (err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
-});
+const adminBro = new AdminBro(AdminBroOptions);
+const router = expressAdminBro.buildRouter(adminBro);
+app.use(adminBro.options.rootPath, router);
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'backend/files'); // Replace with your desired destination folder path
+    cb(null, 'backend/files');
   },
   filename: function (req, file, cb) {
     cb(null, file.originalname);
@@ -59,15 +99,13 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-const port = process.env.PORT || 5000; // Use the PORT variable from .env or default to 5000
+const port = process.env.PORT || 5000;
 
-// connect to db
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {
-    // listen for requests
     app.listen(port, () => {
-      console.log('connected to db & listening on port', process.env.PORT);
+      console.log('Connected to the database and listening on port', port);
     });
   })
   .catch((error) => {

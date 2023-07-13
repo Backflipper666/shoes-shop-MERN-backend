@@ -18,13 +18,13 @@ const userSchema = new Schema({
   favorites: [
     {
       type: Schema.Types.ObjectId,
-      ref: 'shoes',
+      ref: 'Shoes',
     },
   ],
   cart: [
     {
       type: Schema.Types.ObjectId,
-      ref: 'shoes',
+      ref: 'Shoes',
     },
   ],
 });
