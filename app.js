@@ -59,25 +59,30 @@ const ShoesResource = {
         label: 'Price',
         isVisible: { list: true, show: true, edit: true },
       },
+      image: {
+        isVisible: { list: true, show: true, edit: true },
+        components: AdminBro.bundle(
+          path.join(__dirname, 'components', 'ImageShow')
+        ),
+      },
     },
     actions: {
       show: {
         after: async (response, request, context) => {
           const shoe = response.record.params;
-          console.log('Shoe:', shoe);
-
-          // Access and log the 'image.data' property separately
           const imageData = shoe['image.data'];
-          console.log('Image Data:', imageData);
+          console.log('image Data', imageData);
 
-          return response;
-        },
-      },
-      list: {
-        after: async (response, request, context) => {
-          const shoes = response.records.map((record) => record.params);
-          const prices = shoes.map((shoe) => shoe.image);
-          console.log('All Prices:', prices);
+          // Convert Base64 string to image URL
+          const imageBuffer = Buffer.from(imageData, 'base64');
+          const imageUrl = `data:image/jpeg;base64,${imageBuffer.toString(
+            'base64'
+          )}`;
+          const base64String = imageData;
+
+          // Add the imageUrl to the response record's params
+          response.record.params.image = imageUrl;
+
           return response;
         },
       },
