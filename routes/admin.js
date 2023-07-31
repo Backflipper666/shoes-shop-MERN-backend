@@ -1,4 +1,5 @@
 // admin.js
+/*
 const express = require('express');
 const adminRouter = express.Router();
 
@@ -61,3 +62,4 @@ const router = expressAdminBro.buildRouter(adminBro);
 adminRouter.use(adminBro.options.rootPath, router);
 
 module.exports = adminRouter;
+*/

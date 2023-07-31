@@ -39,6 +39,52 @@ app.use('/api/user', userRouter);
 app.use('/api/fake', fakeRouter);
 
 AdminBro.registerAdapter(mongooseAdminBro);
+
+const ShoesResource = {
+  resource: Shoes,
+  options: {
+    properties: {
+      _id: {
+        isVisible: { list: false, show: true, edit: false },
+      },
+      title: {
+        label: 'Name',
+        isVisible: { list: true, show: true, edit: true },
+      },
+      description: {
+        label: 'Description',
+        isVisible: { list: true, show: true, edit: true },
+      },
+      price: {
+        label: 'Price',
+        isVisible: { list: true, show: true, edit: true },
+      },
+    },
+    actions: {
+      show: {
+        after: async (response, request, context) => {
+          const shoe = response.record.params;
+          console.log('Shoe:', shoe);
+
+          // Access and log the 'image.data' property separately
+          const imageData = shoe['image.data'];
+          console.log('Image Data:', imageData);
+
+          return response;
+        },
+      },
+      list: {
+        after: async (response, request, context) => {
+          const shoes = response.records.map((record) => record.params);
+          const prices = shoes.map((shoe) => shoe.image);
+          console.log('All Prices:', prices);
+          return response;
+        },
+      },
+    },
+  },
+};
+
 const AdminBroOptions = {
   resources: [
     {
@@ -59,31 +105,9 @@ const AdminBroOptions = {
         },
       },
     },
-    {
-      resource: Shoes,
-      options: {
-        properties: {
-          _id: {
-            isVisible: { list: false, show: true, edit: false },
-          },
-          title: {
-            label: 'Name',
-            isVisible: { list: true, show: true, edit: true },
-          },
-          description: {
-            label: 'Description',
-            isVisible: { list: true, show: true, edit: true },
-          },
-          price: {
-            label: 'Price',
-            isVisible: { list: true, show: true, edit: true },
-          },
-        },
-      },
-    },
+    ShoesResource, // Use the ShoesResource defined above
   ],
 };
-
 const adminBro = new AdminBro(AdminBroOptions);
 const router = expressAdminBro.buildRouter(adminBro);
 app.use(adminBro.options.rootPath, router);
