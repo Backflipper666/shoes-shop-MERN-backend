@@ -1,6 +1,8 @@
 // ImageShow.jsx
 import React from 'react';
 import { Box } from '@admin-bro/design-system';
+import './styles/ImageShow.css';
+import styled from 'styled-components';
 
 const ImageShow = (props) => {
   console.log('uhu');
@@ -8,12 +10,8 @@ const ImageShow = (props) => {
   const imageUrl = record.params.image;
 
   return (
-    <Box variant="grey">
-      <img
-        src={imageUrl}
-        alt="Shoe image"
-        style={{ width: '100%', height: 'auto' }}
-      />
+    <Box variant="grey" width={256}>
+      <img src={imageUrl} alt="Shoe" style={{ width: '50%', height: 'auto' }} />
     </Box>
   );
 };
